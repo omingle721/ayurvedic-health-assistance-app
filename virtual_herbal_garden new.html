@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Herbal Garden — AI-Powered Ayurvedic Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --forest: #1a3c2a;
+    --moss: #2d5c3e;
+    --sage: #4a7c59;
+    --mint: #7ab893;
+    --cream: #f5f0e8;
+    --parchment: #ede5d0;
+    --gold: #c8a84b;
+    --amber: #e8b84b;
+    --rust: #8b4513;
+    --charcoal: #2c2c2c;
+    --white: #fdfaf4;
+    --text-dark: #1e2d1e;
+    --text-mid: #4a5c4a;
+    --glow: rgba(122, 184, 147, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--forest);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: rgba(26, 60, 42, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(122, 184, 147, 0.2);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700;
+    color: var(--mint); letter-spacing: 0.02em;
+  }
+  .nav-logo .leaf-icon { font-size: 1.5rem; animation: sway 3s ease-in-out infinite; }
+  @keyframes sway { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: rgba(245,240,232,0.75); text-decoration: none;
+    font-size: 0.88rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--mint); }
+  .nav-cta {
+    background: var(--sage); color: var(--white); border: none;
+    padding: 10px 24px; border-radius: 100px; font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.03em;
+  }
+  .nav-cta:hover { background: var(--mint); color: var(--forest); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(45,92,62,0.6) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(74,124,89,0.3) 0%, transparent 60%),
+      radial-gradient(ellipse 30% 30% at 80% 20%, rgba(122,184,147,0.15) 0%, transparent 50%),
+      linear-gradient(180deg, #0d2618 0%, #1a3c2a 50%, #0f2920 100%);
+  }
+  .floating-leaves {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .leaf {
+    position: absolute; font-size: 2rem; opacity: 0.06;
+    animation: floatLeaf linear infinite;
+  }
+  @keyframes floatLeaf {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.08; }
+    90% { opacity: 0.08; }
+    100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(122,184,147,0.12); border: 1px solid rgba(122,184,147,0.3);
+    padding: 8px 20px; border-radius: 100px; font-size: 0.8rem; font-weight: 500;
+    color: var(--mint); letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 32px; position: relative; z-index: 1;
+    animation: fadeSlideUp 0.8s ease both;
+  }
+  .hero-badge::before { content: '●'; font-size: 0.5rem; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 900; line-height: 0.95;
+    color: var(--white); margin-bottom: 8px;
+    position: relative; z-index: 1;
+    animation: fadeSlideUp 0.8s 0.1s ease both;
+  }
+  .hero-title .accent { color: var(--mint); font-style: italic; }
+  .hero-sub-title {
+    font-family: 'DM Serif Display', serif; font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    color: var(--gold); margin-bottom: 28px; font-style: italic;
+    position: relative; z-index: 1;
+    animation: fadeSlideUp 0.8s 0.2s ease both;
+  }
+  .hero-desc {
+    max-width: 600px; font-size: 1.05rem; line-height: 1.75;
+    color: rgba(245,240,232,0.7); margin-bottom: 52px;
+    position: relative; z-index: 1;
+    animation: fadeSlideUp 0.8s 0.3s ease both;
+  }
+  .hero-actions {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+    position: relative; z-index: 1;
+    animation: fadeSlideUp 0.8s 0.4s ease both;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--sage), var(--mint));
+    color: var(--forest); border: none; padding: 16px 40px; border-radius: 100px;
+    font-size: 1rem; font-weight: 700; cursor: pointer;
+    transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+    box-shadow: 0 4px 24px rgba(122,184,147,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(122,184,147,0.4); }
+  .btn-secondary {
+    background: transparent; color: var(--mint);
+    border: 1.5px solid rgba(122,184,147,0.4); padding: 16px 40px; border-radius: 100px;
+    font-size: 1rem; font-weight: 600; cursor: pointer;
+    transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-secondary:hover { background: rgba(122,184,147,0.1); border-color: var(--mint); }
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: rgba(245,240,232,0.4); font-size: 0.75rem; letter-spacing: 0.1em;
+    text-transform: uppercase; z-index: 1; animation: bounce 2s infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+  .hero-stats {
+    display: flex; gap: 60px; justify-content: center; flex-wrap: wrap;
+    margin-top: 80px; position: relative; z-index: 1;
+    animation: fadeSlideUp 0.8s 0.5s ease both;
+    border-top: 1px solid rgba(122,184,147,0.15); padding-top: 48px; width: 100%; max-width: 700px;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 900;
+    color: var(--mint); line-height: 1;
+  }
+  .stat-label { font-size: 0.8rem; color: rgba(245,240,232,0.5); margin-top: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    display: inline-block; font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 700; line-height: 1.1; color: var(--white); margin-bottom: 20px;
+  }
+  .section-title .italic { font-style: italic; color: var(--mint); }
+  .section-body { font-size: 1.05rem; line-height: 1.8; color: rgba(245,240,232,0.7); max-width: 620px; }
+
+  /* ── FULL-WIDTH WRAPPER ── */
+  .fw { max-width: 100%; }
+  .section-inner { max-width: 1200px; margin: 0 auto; }
+
+  /* ── EXPLORE SECTION ── */
+  #explore { background: linear-gradient(180deg, #0f2920 0%, #1a3c2a 100%); max-width: 100%; padding: 100px 0; }
+  .explore-header { padding: 0 48px; margin-bottom: 56px; }
+  .plant-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; padding: 0 48px;
+  }
+  @media(max-width:900px) { .plant-grid { grid-template-columns: 1fr 1fr; } }
+  .plant-card {
+    position: relative; overflow: hidden; cursor: pointer;
+    aspect-ratio: 4/5; background: var(--moss);
+    transition: all 0.4s;
+  }
+  .plant-card:hover { z-index: 2; transform: scale(1.02); }
+  .plant-card-bg {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8rem; opacity: 0.15; transition: all 0.5s;
+  }
+  .plant-card:hover .plant-card-bg { opacity: 0.25; transform: scale(1.1); }
+  .plant-card-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(10,30,18,0.95) 0%, rgba(10,30,18,0.3) 60%, transparent 100%);
+  }
+  .plant-card-content {
+    position: absolute; bottom: 0; left: 0; right: 0; padding: 28px 24px;
+  }
+  .plant-tag {
+    display: inline-block; background: rgba(122,184,147,0.2); color: var(--mint);
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 100px; margin-bottom: 10px;
+    border: 1px solid rgba(122,184,147,0.3);
+  }
+  .plant-name {
+    font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700;
+    color: var(--white); margin-bottom: 4px;
+  }
+  .plant-scientific { font-size: 0.8rem; color: var(--mint); font-style: italic; margin-bottom: 12px; }
+  .plant-desc { font-size: 0.85rem; color: rgba(245,240,232,0.65); line-height: 1.5; }
+  .plant-card-hover {
+    position: absolute; inset: 0; background: rgba(26,60,42,0.97);
+    padding: 32px 24px; opacity: 0; transition: all 0.4s;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .plant-card:hover .plant-card-hover { opacity: 1; }
+  .hover-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--mint); margin-bottom: 16px; }
+  .hover-props { list-style: none; }
+  .hover-props li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 0.85rem; color: rgba(245,240,232,0.8); padding: 8px 0;
+    border-bottom: 1px solid rgba(122,184,147,0.1);
+  }
+  .hover-props li:last-child { border-bottom: none; }
+  .prop-icon { color: var(--gold); flex-shrink: 0; }
+
+  /* ── AI IDENTIFY ── */
+  #identify {
+    background: linear-gradient(135deg, #0d2618 0%, #1a3c2a 50%, #0d2618 100%);
+    max-width: 100%; padding: 100px 0;
+  }
+  .identify-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 48px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+  @media(max-width:900px) { .identify-inner { grid-template-columns: 1fr; } }
+  .upload-zone {
+    border: 2px dashed rgba(122,184,147,0.3); border-radius: 24px;
+    padding: 60px 40px; text-align: center;
+    background: rgba(45,92,62,0.2); cursor: pointer;
+    transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .upload-zone:hover { border-color: var(--mint); background: rgba(45,92,62,0.35); }
+  .upload-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
+  .upload-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--white); margin-bottom: 10px; }
+  .upload-hint { font-size: 0.85rem; color: rgba(245,240,232,0.5); }
+  .upload-btn {
+    margin-top: 24px; background: rgba(122,184,147,0.15);
+    border: 1px solid rgba(122,184,147,0.3); color: var(--mint);
+    padding: 12px 28px; border-radius: 100px; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+  }
+  .upload-btn:hover { background: rgba(122,184,147,0.25); }
+  .sample-images { display: flex; gap: 12px; margin-top: 28px; justify-content: center; flex-wrap: wrap; }
+  .sample-img {
+    width: 70px; height: 70px; border-radius: 12px; overflow: hidden;
+    border: 2px solid rgba(122,184,147,0.2); cursor: pointer;
+    transition: all 0.3s; background: var(--moss);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+  }
+  .sample-img:hover { border-color: var(--mint); transform: scale(1.05); }
+  .sample-img.active { border-color: var(--gold); }
+  .result-panel {
+    background: rgba(45,92,62,0.25); border: 1px solid rgba(122,184,147,0.15);
+    border-radius: 20px; padding: 32px; min-height: 300px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .result-empty { text-align: center; color: rgba(245,240,232,0.35); font-size: 0.95rem; }
+  .result-empty-icon { font-size: 3rem; margin-bottom: 12px; display: block; opacity: 0.5; }
+  .result-content { display: none; }
+  .result-content.active { display: block; animation: fadeSlideUp 0.5s ease; }
+  .result-match { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .result-icon { font-size: 3rem; }
+  .result-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--white); }
+  .result-sci { color: var(--mint); font-size: 0.9rem; font-style: italic; }
+  .confidence-bar { margin-bottom: 20px; }
+  .confidence-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: rgba(245,240,232,0.6); margin-bottom: 8px; }
+  .bar-track { height: 6px; background: rgba(122,184,147,0.15); border-radius: 100px; overflow: hidden; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, var(--sage), var(--mint)); border-radius: 100px; transition: width 1s ease; width: 0; }
+  .result-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .rtag {
+    padding: 6px 14px; border-radius: 100px; font-size: 0.75rem; font-weight: 600;
+    background: rgba(122,184,147,0.12); border: 1px solid rgba(122,184,147,0.25);
+    color: var(--mint);
+  }
+  .result-info { font-size: 0.88rem; line-height: 1.6; color: rgba(245,240,232,0.7); }
+
+  /* ── AI TUTOR ── */
+  #tutor {
+    background: #0d1f15; max-width: 100%; padding: 100px 0;
+  }
+  .tutor-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 48px;
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: start;
+  }
+  @media(max-width:900px) { .tutor-inner { grid-template-columns: 1fr; } }
+  .chat-window {
+    background: rgba(26,60,42,0.6); border: 1px solid rgba(122,184,147,0.15);
+    border-radius: 24px; overflow: hidden;
+  }
+  .chat-header {
+    background: rgba(45,92,62,0.5); padding: 18px 24px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid rgba(122,184,147,0.1);
+  }
+  .chat-avatar {
+    width: 40px; height: 40px; border-radius: 100px;
+    background: linear-gradient(135deg, var(--sage), var(--mint));
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+  }
+  .chat-name { font-weight: 600; color: var(--white); font-size: 0.95rem; }
+  .chat-status { font-size: 0.75rem; color: var(--mint); }
+  .chat-messages { padding: 24px; min-height: 320px; max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+  .chat-messages::-webkit-scrollbar { width: 4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: rgba(122,184,147,0.2); border-radius: 2px; }
+  .msg { max-width: 85%; }
+  .msg-bot { align-self: flex-start; }
+  .msg-user { align-self: flex-end; }
+  .msg-bubble {
+    padding: 12px 16px; border-radius: 18px; font-size: 0.88rem; line-height: 1.6;
+  }
+  .msg-bot .msg-bubble {
+    background: rgba(45,92,62,0.6); color: rgba(245,240,232,0.9);
+    border-bottom-left-radius: 4px; border: 1px solid rgba(122,184,147,0.1);
+  }
+  .msg-user .msg-bubble {
+    background: linear-gradient(135deg, var(--sage), var(--moss));
+    color: var(--white); border-bottom-right-radius: 4px;
+  }
+  .msg-time { font-size: 0.7rem; color: rgba(245,240,232,0.3); margin-top: 4px; padding: 0 4px; }
+  .chat-input-area {
+    padding: 16px 20px; border-top: 1px solid rgba(122,184,147,0.1);
+    display: flex; gap: 12px; align-items: center;
+  }
+  .chat-input {
+    flex: 1; background: rgba(45,92,62,0.3); border: 1px solid rgba(122,184,147,0.2);
+    border-radius: 100px; padding: 12px 20px; color: var(--cream);
+    font-size: 0.88rem; outline: none; font-family: 'DM Sans', sans-serif;
+  }
+  .chat-input::placeholder { color: rgba(245,240,232,0.3); }
+  .chat-input:focus { border-color: rgba(122,184,147,0.5); }
+  .chat-send {
+    width: 44px; height: 44px; border-radius: 100px;
+    background: linear-gradient(135deg, var(--sage), var(--mint));
+    border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem; transition: all 0.3s; flex-shrink: 0;
+  }
+  .chat-send:hover { transform: scale(1.08); }
+  .suggested-qs { display: flex; flex-direction: column; gap: 10px; }
+  .sq {
+    background: rgba(45,92,62,0.3); border: 1px solid rgba(122,184,147,0.15);
+    border-radius: 12px; padding: 14px 18px; cursor: pointer;
+    font-size: 0.85rem; color: rgba(245,240,232,0.75);
+    transition: all 0.3s; display: flex; align-items: center; gap: 10px;
+  }
+  .sq:hover { background: rgba(45,92,62,0.55); border-color: rgba(122,184,147,0.35); color: var(--white); }
+  .sq-icon { color: var(--gold); flex-shrink: 0; }
+  .typing-indicator { display: flex; gap: 4px; padding: 4px 0; }
+  .typing-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--mint);
+    animation: typingPulse 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingPulse { 0%,80%,100%{opacity:0.2;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
+
+  /* ── KNOWLEDGE BASE ── */
+  #knowledge {
+    background: linear-gradient(180deg, #0d2618 0%, #1a3c2a 100%);
+    max-width: 100%; padding: 100px 0;
+  }
+  .kb-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .kb-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; flex-wrap: wrap; gap: 24px; }
+  .kb-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 8px 20px; border-radius: 100px; font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+    border: 1px solid rgba(122,184,147,0.2); background: transparent; color: rgba(245,240,232,0.6);
+    letter-spacing: 0.03em;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: rgba(122,184,147,0.15); border-color: var(--mint); color: var(--mint);
+  }
+  .kb-table {
+    width: 100%; border-collapse: collapse;
+    background: rgba(26,60,42,0.4); border-radius: 16px; overflow: hidden;
+  }
+  .kb-table th {
+    background: rgba(45,92,62,0.5); padding: 16px 20px; text-align: left;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--mint); border-bottom: 1px solid rgba(122,184,147,0.15);
+  }
+  .kb-table td {
+    padding: 16px 20px; font-size: 0.88rem; color: rgba(245,240,232,0.8);
+    border-bottom: 1px solid rgba(122,184,147,0.06); vertical-align: middle;
+  }
+  .kb-table tr:last-child td { border-bottom: none; }
+  .kb-table tr:hover td { background: rgba(45,92,62,0.2); }
+  .kb-icon { font-size: 1.4rem; }
+  .kb-name { font-weight: 600; color: var(--white); }
+  .kb-sci { font-size: 0.75rem; color: var(--mint); font-style: italic; }
+  .uses-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .utag { font-size: 0.72rem; padding: 4px 10px; border-radius: 100px; background: rgba(122,184,147,0.1); color: var(--mint); border: 1px solid rgba(122,184,147,0.2); }
+  .part-badge { font-size: 0.78rem; padding: 4px 12px; border-radius: 100px; background: rgba(200,168,75,0.1); color: var(--gold); border: 1px solid rgba(200,168,75,0.2); }
+  .status-dot { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; }
+  .sdot { width: 7px; height: 7px; border-radius: 50%; }
+  .sdot.verified { background: #4ade80; }
+  .sdot.pending { background: var(--amber); }
+  .action-btn {
+    padding: 7px 16px; border-radius: 100px; font-size: 0.78rem; font-weight: 600;
+    cursor: pointer; transition: all 0.3s; font-family: 'DM Sans', sans-serif;
+    background: rgba(122,184,147,0.1); border: 1px solid rgba(122,184,147,0.2); color: var(--mint);
+  }
+  .action-btn:hover { background: rgba(122,184,147,0.2); }
+
+  /* ── FEATURES ── */
+  #features {
+    background: #0d1f15; max-width: 100%; padding: 100px 0;
+  }
+  .features-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .features-header { text-align: center; margin-bottom: 72px; }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  @media(max-width:900px) { .features-grid { grid-template-columns: 1fr 1fr; } }
+  .feature-card {
+    background: rgba(26,60,42,0.5); border: 1px solid rgba(122,184,147,0.1);
+    border-radius: 20px; padding: 36px 28px;
+    transition: all 0.4s; position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sage), transparent);
+    opacity: 0; transition: all 0.4s;
+  }
+  .feature-card:hover { transform: translateY(-6px); border-color: rgba(122,184,147,0.25); background: rgba(45,92,62,0.4); }
+  .feature-card:hover::before { opacity: 1; }
+  .feature-icon {
+    width: 56px; height: 56px; border-radius: 16px;
+    background: rgba(122,184,147,0.12); border: 1px solid rgba(122,184,147,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; margin-bottom: 24px;
+  }
+  .feature-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--white); margin-bottom: 12px; }
+  .feature-desc { font-size: 0.88rem; line-height: 1.7; color: rgba(245,240,232,0.6); }
+  .feature-link { color: var(--mint); font-size: 0.82rem; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; margin-top: 16px; cursor: pointer; }
+
+  /* ── HOW IT WORKS ── */
+  #how {
+    background: linear-gradient(180deg, #0d2618 0%, #0d1f15 100%);
+    max-width: 100%; padding: 100px 0;
+  }
+  .how-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .how-header { text-align: center; margin-bottom: 72px; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+  .steps::before {
+    content: ''; position: absolute; top: 36px; left: 10%; right: 10%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sage), var(--mint), var(--sage), transparent);
+    z-index: 0;
+  }
+  .step { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
+  .step-num {
+    width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700;
+    background: var(--forest); border: 2px solid var(--sage); color: var(--mint);
+    transition: all 0.3s;
+  }
+  .step:hover .step-num { background: var(--sage); color: var(--white); transform: scale(1.1); }
+  .step-icon { font-size: 1.5rem; margin-bottom: 4px; }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--white); margin-bottom: 10px; }
+  .step-desc { font-size: 0.83rem; color: rgba(245,240,232,0.55); line-height: 1.6; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #080f0a; padding: 60px 48px 40px;
+    border-top: 1px solid rgba(122,184,147,0.1);
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 40px; margin-bottom: 48px; }
+  .footer-brand .logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--mint); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .footer-brand p { font-size: 0.85rem; color: rgba(245,240,232,0.4); max-width: 280px; line-height: 1.7; }
+  .footer-col h4 { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mint); margin-bottom: 16px; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-col ul li a { color: rgba(245,240,232,0.5); text-decoration: none; font-size: 0.88rem; transition: color 0.3s; }
+  .footer-col ul li a:hover { color: var(--mint); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid rgba(122,184,147,0.08); flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-size: 0.8rem; color: rgba(245,240,232,0.3); }
+  .team-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .team-tag { font-size: 0.72rem; padding: 4px 12px; border-radius: 100px; background: rgba(122,184,147,0.08); border: 1px solid rgba(122,184,147,0.12); color: rgba(245,240,232,0.4); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(8,15,10,0.85); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #1a3c2a; border: 1px solid rgba(122,184,147,0.2);
+    border-radius: 24px; padding: 48px; max-width: 560px; width: 100%;
+    position: relative; animation: fadeSlideUp 0.4s ease;
+  }
+  .modal-close {
+    position: absolute; top: 20px; right: 20px;
+    background: rgba(122,184,147,0.1); border: 1px solid rgba(122,184,147,0.2);
+    color: var(--mint); width: 36px; height: 36px; border-radius: 50%;
+    cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+  .modal-close:hover { background: rgba(122,184,147,0.2); }
+  .modal-icon { font-size: 3.5rem; margin-bottom: 16px; display: block; text-align: center; }
+  .modal-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--white); text-align: center; margin-bottom: 8px; }
+  .modal-sci { color: var(--mint); font-style: italic; font-size: 0.9rem; text-align: center; margin-bottom: 28px; }
+  .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .modal-prop { background: rgba(45,92,62,0.3); border-radius: 12px; padding: 16px; }
+  .modal-prop-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .modal-prop-value { font-size: 0.88rem; color: rgba(245,240,232,0.85); line-height: 1.5; }
+  .modal-desc { font-size: 0.9rem; line-height: 1.7; color: rgba(245,240,232,0.7); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--forest); }
+  ::-webkit-scrollbar-thumb { background: var(--sage); border-radius: 3px; }
+
+  /* Active section */
+  .section-divider {
+    width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(122,184,147,0.2), transparent);
+  }
+
+  @media(max-width:768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 64px 24px; }
+    .hero-stats { gap: 32px; }
+    .plant-grid { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .steps::before { display: none; }
+    .features-grid { grid-template-columns: 1fr; }
+    .identify-inner, .tutor-inner { gap: 40px; }
+    footer { padding: 48px 24px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span class="leaf-icon">🌿</span>
+    VHGarden
+  </div>
+  <ul class="nav-links">
+    <li><a href="#explore">Explore</a></li>
+    <li><a href="#identify">AI Identify</a></li>
+    <li><a href="#tutor">AI Tutor</a></li>
+    <li><a href="#knowledge">Knowledge Base</a></li>
+    <li><a href="#how">How It Works</a></li>
+  </ul>
+  <button class="nav-cta" onclick="scrollTo({top:0,behavior:'smooth'})">Get Started</button>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div class="floating-leaves" id="floatingLeaves"></div>
+
+  <div class="hero-badge">🌱 Design Thinking Prototype · MIT-ADT University</div>
+
+  <h1 class="hero-title">
+    Virtual<br><span class="accent">Herbal</span><br>Garden
+  </h1>
+  <p class="hero-sub-title">An AI-Powered Ayurvedic Knowledge Platform</p>
+  <p class="hero-desc">
+    Bridging ancient Ayurvedic wisdom with modern AI technology — preserving, identifying, and teaching medicinal plant knowledge for a new generation of learners.
+  </p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="document.getElementById('identify').scrollIntoView({behavior:'smooth'})">🔍 Try AI Identification</button>
+    <button class="btn-secondary" onclick="document.getElementById('explore').scrollIntoView({behavior:'smooth'})">Explore Garden →</button>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" id="s1">0</div>
+      <div class="stat-label">Medicinal Plants</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="s2">0</div>
+      <div class="stat-label">Ayurvedic Uses</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="s3">0%</div>
+      <div class="stat-label">AI Accuracy</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="s4">0+</div>
+      <div class="stat-label">Expert Verified</div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll to explore</span>
+    <span style="font-size:1rem">↓</span>
+  </div>
+</div>
+
+<!-- EXPLORE -->
+<div class="section-divider"></div>
+<div id="explore">
+  <div class="explore-header section-inner" style="padding:0 48px">
+    <span class="section-label">🌿 Plant Library</span>
+    <h2 class="section-title">Explore the <span class="italic">Herbal Garden</span></h2>
+    <p class="section-body">Discover 500+ documented medicinal plants with rich Ayurvedic knowledge, properties, and uses. Hover to reveal details.</p>
+  </div>
+  <div class="plant-grid">
+    <!-- Cards generated by JS -->
+  </div>
+</div>
+
+<!-- IDENTIFY -->
+<div class="section-divider"></div>
+<div id="identify">
+  <div class="identify-inner">
+    <div>
+      <span class="section-label">🤖 AI-Powered</span>
+      <h2 class="section-title">Identify Any <span class="italic">Plant Instantly</span></h2>
+      <p class="section-body" style="margin-bottom:32px">Upload a photo or select a sample below. Our AI analyzes leaf shape, color, and texture to identify the plant and retrieve its Ayurvedic properties.</p>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(122,184,147,0.15);border:1px solid rgba(122,184,147,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">✓</div>
+          <div>
+            <div style="font-weight:600;color:var(--white);font-size:0.9rem;margin-bottom:3px">Deep Learning Vision Model</div>
+            <div style="font-size:0.82rem;color:rgba(245,240,232,0.5)">Trained on 50,000+ plant images across 500 species</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(122,184,147,0.15);border:1px solid rgba(122,184,147,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">✓</div>
+          <div>
+            <div style="font-weight:600;color:var(--white);font-size:0.9rem;margin-bottom:3px">Instant Ayurvedic Profile</div>
+            <div style="font-size:0.82rem;color:rgba(245,240,232,0.5)">Retrieves properties, uses, dosage, and precautions</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:14px">
+          <div style="width:32px;height:32px;border-radius:50%;background:rgba(122,184,147,0.15);border:1px solid rgba(122,184,147,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem">✓</div>
+          <div>
+            <div style="font-weight:600;color:var(--white);font-size:0.9rem;margin-bottom:3px">Expert Verified Results</div>
+            <div style="font-size:0.82rem;color:rgba(245,240,232,0.5)">All information validated by Ayurvedic practitioners</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="upload-zone" id="uploadZone" onclick="triggerUpload()">
+        <span class="upload-icon">📷</span>
+        <div class="upload-title">Drop a plant photo here</div>
+        <div class="upload-hint">Supports JPG, PNG · or select a sample below</div>
+        <button class="upload-btn">📁 Choose File</button>
+        <div class="sample-images" id="sampleImages">
+          <!-- filled by JS -->
+        </div>
+      </div>
+      <div class="result-panel" id="resultPanel" style="margin-top:20px">
+        <div class="result-empty" id="resultEmpty">
+          <span class="result-empty-icon">🔬</span>
+          <p>Select a sample plant image above to see AI identification results</p>
+        </div>
+        <div class="result-content" id="resultContent">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI TUTOR -->
+<div class="section-divider"></div>
+<div id="tutor">
+  <div class="tutor-inner">
+    <div>
+      <span class="section-label">💬 AI Tutor</span>
+      <h2 class="section-title">Your <span class="italic">Ayurvedic</span> Learning Companion</h2>
+      <p class="section-body" style="margin-bottom:36px">Ask anything about medicinal plants, their uses, dosage, or Ayurvedic principles. The AI tutor provides expert-verified, conversational answers.</p>
+      <p style="font-size:0.85rem;color:rgba(245,240,232,0.5);margin-bottom:16px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase">Suggested Questions</p>
+      <div class="suggested-qs" id="suggestedQs"></div>
+    </div>
+    <div class="chat-window">
+      <div class="chat-header">
+        <div class="chat-avatar">🌿</div>
+        <div>
+          <div class="chat-name">Vaidya AI</div>
+          <div class="chat-status">● Online · Ayurvedic Knowledge Base</div>
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-input-area">
+        <input class="chat-input" id="chatInput" placeholder="Ask about any medicinal plant..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- KNOWLEDGE BASE -->
+<div class="section-divider"></div>
+<div id="knowledge">
+  <div class="kb-inner">
+    <div class="kb-header">
+      <div>
+        <span class="section-label">📚 Knowledge Base</span>
+        <h2 class="section-title">Structured <span class="italic">Herbal Database</span></h2>
+      </div>
+      <div class="kb-filters" id="kbFilters"></div>
+    </div>
+    <table class="kb-table" id="kbTable">
+      <thead>
+        <tr>
+          <th>Plant</th>
+          <th>Ayurvedic Uses</th>
+          <th>Part Used</th>
+          <th>Properties</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="kbBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="section-divider"></div>
+<div id="features">
+  <div class="features-inner">
+    <div class="features-header">
+      <span class="section-label">⚙️ Core Features</span>
+      <h2 class="section-title">Everything You Need to <span class="italic">Learn & Preserve</span></h2>
+      <p class="section-body" style="margin:0 auto">A complete ecosystem for Ayurvedic plant knowledge — from identification to education.</p>
+    </div>
+    <div class="features-grid" id="featuresGrid"></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section-divider"></div>
+<div id="how">
+  <div class="how-inner">
+    <div class="how-header">
+      <span class="section-label">🔄 Workflow</span>
+      <h2 class="section-title">How It <span class="italic">Works</span></h2>
+      <p class="section-body" style="margin:0 auto">From a single photo to a complete Ayurvedic knowledge profile — in seconds.</p>
+    </div>
+    <div class="steps" id="steps"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="section-divider"></div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">🌿 Virtual Herbal Garden</div>
+        <p>An AI-powered platform for preserving and learning Ayurvedic medicinal plant knowledge. MIT-ADT University · B.Tech SC/IT</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#explore">Plant Library</a></li>
+          <li><a href="#identify">AI Identification</a></li>
+          <li><a href="#tutor">AI Tutor</a></li>
+          <li><a href="#knowledge">Knowledge Base</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Project</h4>
+        <ul>
+          <li><a href="#">Problem Statement</a></li>
+          <li><a href="#">Need Statement</a></li>
+          <li><a href="#">Proposed Solution</a></li>
+          <li><a href="#">Prototype Scope</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Team</h4>
+        <ul>
+          <li><a href="#">Om Ingle · Roll 50</a></li>
+          <li><a href="#">Rohit Patil · Roll 57</a></li>
+          <li><a href="#">Soham Pawar · Roll 59</a></li>
+          <li><a href="#">Krishna Watyani · Roll 75</a></li>
+          <li><a href="#">Yuvraj Suryawanshi · Roll 74</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Virtual Herbal Garden · MIT-ADT University · Mid Term Jury Presentation</p>
+      <div class="team-tags">
+        <span class="team-tag">Design Thinking</span>
+        <span class="team-tag">AI / ML</span>
+        <span class="team-tag">Ayurveda</span>
+        <span class="team-tag">Web Prototype</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="document.getElementById('modalOverlay').classList.remove('open')">✕</button>
+    <span class="modal-icon" id="mIcon"></span>
+    <h2 class="modal-title" id="mTitle"></h2>
+    <p class="modal-sci" id="mSci"></p>
+    <div class="modal-grid" id="mGrid"></div>
+    <p class="modal-desc" id="mDesc"></p>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const plants = [
+  {
+    emoji: '🌿', name: 'Tulsi', sci: 'Ocimum sanctum', tag: 'Adaptogen',
+    desc: 'The Queen of Herbs — sacred in Ayurveda for over 3000 years.',
+    uses: ['Immunity Boost', 'Stress Relief', 'Respiratory Health', 'Anti-bacterial'],
+    part: 'Leaves', rasa: 'Pungent, Bitter', virya: 'Hot',
+    dosha: 'Balances Vata, Kapha', region: 'Pan-India',
+    detail: 'Tulsi (Holy Basil) is revered as an adaptogen that helps the body adapt to stress. Rich in eugenol, it has powerful anti-inflammatory, anti-bacterial, and immunomodulatory properties. Used in fevers, coughs, and respiratory disorders.',
+    confidence: 97, status: 'verified',
+    bg: 'linear-gradient(135deg, #1a3c2a, #2d5c3e)',
+    props: ['Anti-inflammatory', 'Antimicrobial', 'Adaptogen']
+  },
+  {
+    emoji: '🌱', name: 'Ashwagandha', sci: 'Withania somnifera', tag: 'Rasayana',
+    desc: 'The root of vitality — known as Indian Ginseng for strength and rejuvenation.',
+    uses: ['Stress & Anxiety', 'Energy & Vitality', 'Sleep Aid', 'Immunity'],
+    part: 'Root', rasa: 'Bitter, Astringent', virya: 'Hot',
+    dosha: 'Balances Vata, Kapha', region: 'Rajasthan, MP',
+    detail: 'Ashwagandha is a premier Rasayana in Ayurveda. Withanolides — its active compounds — reduce cortisol levels and help manage chronic stress. It enhances muscular strength, cognitive function, and reproductive health.',
+    confidence: 94, status: 'verified',
+    bg: 'linear-gradient(135deg, #2c1a0e, #5c3d2e)',
+    props: ['Nervine Tonic', 'Anti-stress', 'Rejuvenating']
+  },
+  {
+    emoji: '🍃', name: 'Neem', sci: 'Azadirachta indica', tag: 'Purifier',
+    desc: 'Nature\'s pharmacy — one of the most versatile medicinal trees in Ayurveda.',
+    uses: ['Blood Purifier', 'Skin Disorders', 'Dental Health', 'Antifungal'],
+    part: 'Leaves, Bark, Seed', rasa: 'Bitter', virya: 'Cool',
+    dosha: 'Pacifies Pitta, Kapha', region: 'Tropical India',
+    detail: 'Neem is described in Ayurveda as Sarvaroga Nivarini — the curer of all ailments. Azadirachtin in neem leaves is a potent insecticidal and antimicrobial. Used for skin diseases, diabetes, dental hygiene, and wound healing.',
+    confidence: 96, status: 'verified',
+    bg: 'linear-gradient(135deg, #0f2a18, #1e5c2a)',
+    props: ['Blood Purifier', 'Antimicrobial', 'Antifungal']
+  },
+  {
+    emoji: '🌼', name: 'Turmeric', sci: 'Curcuma longa', tag: 'Anti-inflammatory',
+    desc: 'The golden spice of life — Ayurveda\'s most celebrated healing herb.',
+    uses: ['Anti-inflammatory', 'Joint Health', 'Wound Healing', 'Antioxidant'],
+    part: 'Rhizome', rasa: 'Bitter, Pungent', virya: 'Hot',
+    dosha: 'Balances all Doshas', region: 'Karnataka, Andhra',
+    detail: 'Turmeric is called Haridra in Sanskrit. Curcumin — its primary bioactive compound — is one of the most extensively researched natural anti-inflammatory agents. Used for arthritis, metabolic syndrome, anxiety, and to aid in managing inflammation.',
+    confidence: 99, status: 'verified',
+    bg: 'linear-gradient(135deg, #3a2800, #7a5c00)',
+    props: ['Anti-inflammatory', 'Antioxidant', 'Antimicrobial']
+  },
+  {
+    emoji: '🍀', name: 'Brahmi', sci: 'Bacopa monnieri', tag: 'Medhya',
+    desc: 'The brain herb — renowned for enhancing memory, focus, and cognitive function.',
+    uses: ['Memory Enhancement', 'Anxiety Relief', 'ADHD', 'Neuroprotection'],
+    part: 'Whole Plant', rasa: 'Bitter, Astringent, Sweet', virya: 'Cool',
+    dosha: 'Balances Pitta, Vata', region: 'Wetlands, Himalayas',
+    detail: 'Brahmi is one of the most important Medhya Rasayanas (brain tonics) in Ayurveda. Bacosides A and B enhance nerve signal transmission and synaptic plasticity. Clinical studies show significant improvement in memory consolidation and anxiety reduction.',
+    confidence: 91, status: 'verified',
+    bg: 'linear-gradient(135deg, #0d2618, #1a4c2e)',
+    props: ['Nootropic', 'Anxiolytic', 'Neuroprotective']
+  },
+  {
+    emoji: '🌺', name: 'Giloy', sci: 'Tinospora cordifolia', tag: 'Immunomodulator',
+    desc: 'The Amrita vine — the divine nectar of immortality in Ayurvedic texts.',
+    uses: ['Immunity', 'Dengue & Malaria', 'Diabetes', 'Arthritis'],
+    part: 'Stem', rasa: 'Bitter, Astringent', virya: 'Hot',
+    dosha: 'Balances all Doshas', region: 'Tropical India',
+    detail: 'Giloy is referred to as "Amrita" (divine nectar) for its remarkable immune-modulating properties. Guduchi (its Sanskrit name) contains tinosporin, palmatine, and berberine. It is used extensively in fever management, especially dengue and chronic fevers.',
+    confidence: 88, status: 'pending',
+    bg: 'linear-gradient(135deg, #1a0d2a, #3d1a5c)',
+    props: ['Immunomodulator', 'Antipyretic', 'Antidiabetic']
+  }
+];
+
+const kbData = [
+  { emoji:'🌿', name:'Tulsi', sci:'Ocimum sanctum', uses:['Immunity','Respiratory','Anti-stress'], part:'Leaves', props:'Pungent · Hot', status:'verified' },
+  { emoji:'🌱', name:'Ashwagandha', sci:'Withania somnifera', uses:['Stress Relief','Energy','Sleep'], part:'Root', props:'Bitter · Hot', status:'verified' },
+  { emoji:'🍃', name:'Neem', sci:'Azadirachta indica', uses:['Blood Purifier','Skin','Dental'], part:'Leaves, Bark', props:'Bitter · Cool', status:'verified' },
+  { emoji:'🌼', name:'Turmeric', sci:'Curcuma longa', uses:['Anti-inflammatory','Antioxidant'], part:'Rhizome', props:'Pungent · Hot', status:'verified' },
+  { emoji:'🍀', name:'Brahmi', sci:'Bacopa monnieri', uses:['Memory','Focus','Anxiety'], part:'Whole Plant', props:'Bitter · Cool', status:'verified' },
+  { emoji:'🌺', name:'Giloy', sci:'Tinospora cordifolia', uses:['Immunity','Fever','Diabetes'], part:'Stem', props:'Bitter · Hot', status:'pending' },
+  { emoji:'🌸', name:'Shatavari', sci:'Asparagus racemosus', uses:['Women\'s Health','Digestion'], part:'Root', props:'Sweet · Cool', status:'verified' },
+  { emoji:'🌻', name:'Triphala', sci:'Three-fruit blend', uses:['Digestion','Detox','Eye Health'], part:'Fruit', props:'Astringent · Neutral', status:'verified' },
+];
+
+const chatResponses = {
+  'tulsi': 'Tulsi (Ocimum sanctum) is called the "Queen of Herbs" 🌿 in Ayurveda. It contains eugenol and rosmarinic acid which give it powerful anti-inflammatory and antimicrobial properties. It balances Vata and Kapha doshas. Commonly used in fevers, respiratory issues, and as a daily immunity booster. Consume 5–10 fresh leaves daily or as kadha (decoction).',
+  'ashwagandha': 'Ashwagandha (Withania somnifera) is a premier Rasayana 🌱 — a rejuvenating herb. Withanolides reduce cortisol and support adrenal health. Recommended dose: 300–500mg of root extract. Best taken with warm milk before bed. Avoid during pregnancy. It takes 4–8 weeks of consistent use for optimal effects.',
+  'neem': 'Neem (Azadirachta indica) 🍃 is called Sarvaroga Nivarini — the curer of all diseases. Its bitter taste pacifies Pitta and Kapha. Neem leaves purify the blood, fight skin disorders, and support dental hygiene. Azadirachtin in seeds is a potent natural pesticide. Use 2–4 neem leaves daily or apply neem oil topically for skin conditions.',
+  'turmeric': 'Turmeric (Curcuma longa) 🌼 — Haridra in Sanskrit — is perhaps the most studied Ayurvedic herb. Curcumin has powerful anti-inflammatory action comparable to some medications, but without side effects. Consume with black pepper (piperine) to enhance absorption by 2000%. Golden milk at night is a traditional remedy for joint pain, immunity, and sleep.',
+  'brahmi': 'Brahmi (Bacopa monnieri) 🍀 is the finest Medhya Rasayana — a brain tonic. Bacosides enhance neuronal communication and protect against oxidative stress. Traditionally used to improve memory, reduce anxiety, and support ADHD management. Standard dose: 300–600mg of standardized extract daily. It\'s best taken with ghee for enhanced bioavailability.',
+  'giloy': 'Giloy (Tinospora cordifolia) 🌺 is called "Amrita" — immortal nectar. Guduchi alkaloids are powerful immunomodulators. Clinical evidence supports its use in dengue fever, where it significantly increases platelet counts. It also has hypoglycemic properties useful in Type 2 diabetes management. Use the fresh stem for maximum efficacy.',
+  'default': 'Great question! 🌿 The Virtual Herbal Garden knowledge base contains information on 500+ Ayurvedic medicinal plants. Could you specify which plant or health concern you\'re asking about? I can provide detailed information on properties, uses, dosage, contraindications, and the Ayurvedic principles behind any herb in our database.'
+};
+
+const suggestedQuestions = [
+  { icon:'🌿', q:'What are the benefits of Tulsi?' },
+  { icon:'🧠', q:'How does Brahmi improve memory?' },
+  { icon:'💛', q:'How to use Turmeric for inflammation?' },
+  { icon:'⚡', q:'Tell me about Ashwagandha dosage' },
+  { icon:'🛡️', q:'What is Giloy used for?' },
+];
+
+const featureData = [
+  { icon:'🔍', title:'AI Plant Identification', desc:'Upload any plant image and receive instant identification with 94%+ accuracy, powered by a deep learning vision model trained on 50,000+ plant images.' },
+  { icon:'💬', title:'AI Ayurvedic Tutor', desc:'Converse with Vaidya AI — an intelligent chatbot that answers questions about medicinal plants, dosages, Ayurvedic principles, and contraindications.' },
+  { icon:'📚', title:'Structured Knowledge Base', desc:'Browse a comprehensive, educator-managed database of 500+ medicinal plants with verified properties, uses, and classical Ayurvedic references.' },
+  { icon:'🎓', title:'Educator Dashboard', desc:'Verified Ayurvedic practitioners and educators can add, update, and verify plant entries, ensuring all information is authentic and trustworthy.' },
+  { icon:'🌍', title:'3D Plant Explorer', desc:'Explore interactive 3D models of medicinal plants — examine leaf morphology, root structures, and flowering patterns in detail.' },
+  { icon:'📊', title:'Personalized Learning', desc:'Track your learning journey with progress metrics, quizzes, and personalized plant recommendations based on your interests and study goals.' },
+];
+
+const stepsData = [
+  { num:'01', icon:'📷', title:'Capture or Upload', desc:'Take a photo of any plant or upload an existing image from your gallery.' },
+  { num:'02', icon:'🤖', title:'AI Analysis', desc:'Our vision model analyzes leaf patterns, colors, and morphology in real time.' },
+  { num:'03', icon:'📖', title:'Knowledge Retrieval', desc:'The platform retrieves verified Ayurvedic data — uses, dosage, properties, and more.' },
+  { num:'04', icon:'💡', title:'Learn & Explore', desc:'Dive deeper with the AI tutor, browse related plants, and track your learning.' },
+];
+
+// ── INIT ──
+function init() {
+  buildFloatingLeaves();
+  buildPlantGrid();
+  buildSampleImages();
+  buildSuggestedQuestions();
+  buildInitialChat();
+  buildKBTable();
+  buildKBFilters();
+  buildFeatures();
+  buildSteps();
+  animateStats();
+  initDragAndDrop();
+}
+
+function buildFloatingLeaves() {
+  const container = document.getElementById('floatingLeaves');
+  const leafEmojis = ['🍃','🌿','🌱','🍀','🌾','🌲'];
+  for (let i = 0; i < 20; i++) {
+    const leaf = document.createElement('div');
+    leaf.className = 'leaf';
+    leaf.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
+    leaf.style.left = Math.random() * 100 + '%';
+    leaf.style.animationDuration = (8 + Math.random() * 15) + 's';
+    leaf.style.animationDelay = (Math.random() * 15) + 's';
+    leaf.style.fontSize = (1 + Math.random() * 2.5) + 'rem';
+    container.appendChild(leaf);
+  }
+}
+
+function buildPlantGrid() {
+  const grid = document.querySelector('.plant-grid');
+  plants.forEach((p, i) => {
+    grid.innerHTML += `
+      <div class="plant-card" onclick="openModal(${i})" style="background:${p.bg}">
+        <div class="plant-card-bg">${p.emoji}</div>
+        <div class="plant-card-overlay"></div>
+        <div class="plant-card-content">
+          <span class="plant-tag">${p.tag}</span>
+          <div class="plant-name">${p.name}</div>
+          <div class="plant-scientific">${p.sci}</div>
+          <div class="plant-desc">${p.desc}</div>
+        </div>
+        <div class="plant-card-hover">
+          <div class="hover-title">${p.emoji} ${p.name} Properties</div>
+          <ul class="hover-props">
+            <li><span class="prop-icon">🧪</span> <span><strong>Rasa (Taste):</strong> ${p.rasa}</span></li>
+            <li><span class="prop-icon">🌡️</span> <span><strong>Virya (Potency):</strong> ${p.virya}</span></li>
+            <li><span class="prop-icon">⚖️</span> <span><strong>Dosha Effect:</strong> ${p.dosha}</span></li>
+            <li><span class="prop-icon">🌿</span> <span><strong>Part Used:</strong> ${p.part}</span></li>
+            <li><span class="prop-icon">📍</span> <span><strong>Region:</strong> ${p.region}</span></li>
+          </ul>
+        </div>
+      </div>`;
+  });
+}
+
+function buildSampleImages() {
+  const container = document.getElementById('sampleImages');
+  plants.forEach((p, i) => {
+    container.innerHTML += `<div class="sample-img" id="sample-${i}" onclick="identifyPlant(${i})" title="${p.name}">${p.emoji}</div>`;
+  });
+}
+
+function identifyPlant(i) {
+  document.querySelectorAll('.sample-img').forEach(el => el.classList.remove('active'));
+  document.getElementById('sample-' + i).classList.add('active');
+
+  const p = plants[i];
+  const empty = document.getElementById('resultEmpty');
+  const content = document.getElementById('resultContent');
+  empty.style.display = 'none';
+  content.classList.remove('active');
+
+  content.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <span style="font-size:2rem">${p.emoji}</span>
+      <div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--white)">${p.name}</div>
+        <div style="color:var(--mint);font-style:italic;font-size:0.85rem">${p.sci}</div>
+      </div>
+    </div>
+    <div class="confidence-bar">
+      <div class="confidence-label"><span>AI Confidence</span><span>${p.confidence}%</span></div>
+      <div class="bar-track"><div class="bar-fill" id="barFill" style="width:0"></div></div>
+    </div>
+    <div class="result-tags">${p.props.map(pr=>`<span class="rtag">${pr}</span>`).join('')}</div>
+    <div class="result-info">${p.detail}</div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <button class="action-btn" onclick="openModal(${i})">📖 Full Profile</button>
+      <button class="action-btn" onclick="askTutor('${p.name}')">💬 Ask AI Tutor</button>
+    </div>`;
+
+  setTimeout(() => {
+    content.classList.add('active');
+    setTimeout(() => { document.getElementById('barFill').style.width = p.confidence + '%'; }, 100);
+  }, 50);
+}
+
+function askTutor(plantName) {
+  document.getElementById('tutor').scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => {
+    document.getElementById('chatInput').value = 'Tell me about ' + plantName;
+    sendChat();
+  }, 600);
+}
+
+function buildInitialChat() {
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML = `
+    <div class="msg msg-bot">
+      <div class="msg-bubble">Namaste! 🙏 I am <strong>Vaidya AI</strong>, your Ayurvedic knowledge companion. I have access to 500+ medicinal plants with classical Ayurvedic references. Ask me anything about herbs, their properties, uses, or Ayurvedic principles!</div>
+      <div class="msg-time">Just now</div>
+    </div>`;
+}
+
+function buildSuggestedQuestions() {
+  const container = document.getElementById('suggestedQs');
+  suggestedQuestions.forEach(sq => {
+    container.innerHTML += `
+      <div class="sq" onclick="askQuestion('${sq.q}')">
+        <span class="sq-icon">${sq.icon}</span>
+        <span>${sq.q}</span>
+      </div>`;
+  });
+}
+
+function askQuestion(q) {
+  document.getElementById('chatInput').value = q;
+  sendChat();
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msgs = document.getElementById('chatMessages');
+  const text = input.value.trim();
+  if (!text) return;
+
+  const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  msgs.innerHTML += `
+    <div class="msg msg-user">
+      <div class="msg-bubble">${text}</div>
+      <div class="msg-time" style="text-align:right">${now}</div>
+    </div>`;
+  input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Typing indicator
+  msgs.innerHTML += `<div class="msg msg-bot" id="typingMsg">
+    <div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>
+  </div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  setTimeout(() => {
+    document.getElementById('typingMsg')?.remove();
+    let resp = chatResponses.default;
+    const lower = text.toLowerCase();
+    for (const [key, val] of Object.entries(chatResponses)) {
+      if (lower.includes(key)) { resp = val; break; }
+    }
+    const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    msgs.innerHTML += `
+      <div class="msg msg-bot">
+        <div class="msg-bubble">${resp}</div>
+        <div class="msg-time">${replyTime}</div>
+      </div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1200 + Math.random() * 600);
+}
+
+function buildKBTable() {
+  const tbody = document.getElementById('kbBody');
+  kbData.forEach((p, i) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:1.4rem">${p.emoji}</span>
+            <div>
+              <div class="kb-name">${p.name}</div>
+              <div class="kb-sci">${p.sci}</div>
+            </div>
+          </div>
+        </td>
+        <td><div class="uses-tags">${p.uses.map(u=>`<span class="utag">${u}</span>`).join('')}</div></td>
+        <td><span class="part-badge">${p.part}</span></td>
+        <td style="color:rgba(245,240,232,0.65);font-size:0.83rem">${p.props}</td>
+        <td>
+          <div class="status-dot">
+            <div class="sdot ${p.status}"></div>
+            <span style="color:${p.status==='verified'?'#4ade80':'var(--amber)'}">
+              ${p.status === 'verified' ? 'Verified' : 'Pending'}
+            </span>
+          </div>
+        </td>
+        <td><button class="action-btn" onclick="identifyPlant(${Math.min(i, plants.length-1)});document.getElementById('identify').scrollIntoView({behavior:'smooth'})">View</button></td>
+      </tr>`;
+  });
+}
+
+function buildKBFilters() {
+  const filters = document.getElementById('kbFilters');
+  const categories = ['All Plants', 'Verified', 'Adaptogens', 'Immunity', 'Digestive', 'Brain Herbs'];
+  categories.forEach((c, i) => {
+    filters.innerHTML += `<button class="filter-btn ${i===0?'active':''}" onclick="setFilter(this)">${c}</button>`;
+  });
+}
+
+function setFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function buildFeatures() {
+  const grid = document.getElementById('featuresGrid');
+  featureData.forEach(f => {
+    grid.innerHTML += `
+      <div class="feature-card">
+        <div class="feature-icon">${f.icon}</div>
+        <div class="feature-title">${f.title}</div>
+        <div class="feature-desc">${f.desc}</div>
+        <span class="feature-link">Learn more →</span>
+      </div>`;
+  });
+}
+
+function buildSteps() {
+  const container = document.getElementById('steps');
+  stepsData.forEach(s => {
+    container.innerHTML += `
+      <div class="step">
+        <div class="step-num"><span>${s.num}</span></div>
+        <div class="step-icon">${s.icon}</div>
+        <div class="step-title">${s.title}</div>
+        <div class="step-desc">${s.desc}</div>
+      </div>`;
+  });
+}
+
+function animateStats() {
+  const targets = [500, 1200, 94, 50];
+  const ids = ['s1','s2','s3','s4'];
+  const suffixes = ['','+','%','+'];
+  ids.forEach((id, i) => {
+    const el = document.getElementById(id);
+    let start = 0;
+    const duration = 2000;
+    const step = targets[i] / (duration / 16);
+    const timer = setInterval(() => {
+      start = Math.min(start + step, targets[i]);
+      el.textContent = Math.floor(start) + suffixes[i];
+      if (start >= targets[i]) clearInterval(timer);
+    }, 16);
+  });
+}
+
+function openModal(i) {
+  const p = plants[i];
+  document.getElementById('mIcon').textContent = p.emoji;
+  document.getElementById('mTitle').textContent = p.name;
+  document.getElementById('mSci').textContent = p.sci;
+  document.getElementById('mGrid').innerHTML = `
+    <div class="modal-prop"><div class="modal-prop-label">Rasa (Taste)</div><div class="modal-prop-value">${p.rasa}</div></div>
+    <div class="modal-prop"><div class="modal-prop-label">Virya (Potency)</div><div class="modal-prop-value">${p.virya}</div></div>
+    <div class="modal-prop"><div class="modal-prop-label">Dosha Effect</div><div class="modal-prop-value">${p.dosha}</div></div>
+    <div class="modal-prop"><div class="modal-prop-label">Part Used</div><div class="modal-prop-value">${p.part}</div></div>
+    <div class="modal-prop"><div class="modal-prop-label">Region</div><div class="modal-prop-value">${p.region}</div></div>
+    <div class="modal-prop"><div class="modal-prop-label">Category</div><div class="modal-prop-value">${p.tag}</div></div>`;
+  document.getElementById('mDesc').textContent = p.detail;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) {
+    document.getElementById('modalOverlay').classList.remove('open');
+  }
+}
+
+function initDragAndDrop() {
+  const uploadZone = document.getElementById('uploadZone');
+  
+  // Prevent default drag behaviors on the whole document
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    uploadZone.addEventListener(eventName, preventDefaults, false);
+    document.body.addEventListener(eventName, preventDefaults, false);
+  });
+  
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  // Highlight drop zone when item is dragged over it
+  ['dragenter', 'dragover'].forEach(eventName => {
+    uploadZone.addEventListener(eventName, () => {
+      uploadZone.style.borderColor = 'var(--mint)';
+      uploadZone.style.background = 'rgba(122, 184, 147, 0.08)';
+      uploadZone.style.transform = 'scale(1.02)';
+    }, false);
+  });
+  
+  ['dragleave', 'drop'].forEach(eventName => {
+    uploadZone.addEventListener(eventName, () => {
+      uploadZone.style.borderColor = 'rgba(122, 184, 147, 0.3)';
+      uploadZone.style.background = 'rgba(122, 184, 147, 0.04)';
+      uploadZone.style.transform = 'scale(1)';
+    }, false);
+  });
+  
+  // Handle dropped files
+  uploadZone.addEventListener('drop', handleDrop, false);
+  
+  function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    
+    if (files.length > 0) {
+      processImageFile(files[0]);
+    }
+  }
+}
+
+function processImageFile(file) {
+  // Validate file type
+  const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+  if (!validTypes.includes(file.type)) {
+    alert('❌ Please upload a valid image file (PNG, JPG, or WebP)');
+    return;
+  }
+  
+  // Validate file size (max 10MB)
+  const maxSize = 10 * 1024 * 1024;
+  if (file.size > maxSize) {
+    alert('❌ Image file is too large. Please upload an image smaller than 10MB.');
+    return;
+  }
+  
+  // Show loading state
+  const uploadZone = document.getElementById('uploadZone');
+  const originalHTML = uploadZone.innerHTML;
+  uploadZone.innerHTML = `
+    <div style="text-align:center;padding:40px">
+      <div style="font-size:2.5rem;margin-bottom:16px">⏳</div>
+      <div style="font-size:1rem;color:var(--mint);font-weight:600;margin-bottom:8px">Processing Image...</div>
+      <div style="font-size:0.85rem;color:rgba(245,240,232,0.5)">Analyzing plant features</div>
+    </div>`;
+  
+  // Read the file
+  const reader = new FileReader();
+  
+  reader.onload = (event) => {
+    try {
+      const imageData = event.target.result;
+      
+      // Display preview
+      const preview = document.getElementById('uploadPreview');
+      const previewImg = document.getElementById('previewImage');
+      
+      if (preview && previewImg) {
+        previewImg.src = imageData;
+        preview.classList.add('active');
+      }
+      
+      // Restore upload zone
+      uploadZone.innerHTML = originalHTML;
+      
+      // Simulate AI identification (in real app, this would send to backend)
+      setTimeout(() => {
+        // Pick a plant based on file name or randomly
+        const plantIndex = Math.floor(Math.random() * plants.length);
+        identifyPlant(plantIndex);
+      }, 1500);
+      
+    } catch (error) {
+      console.error('Error processing image:', error);
+      uploadZone.innerHTML = originalHTML;
+      alert('❌ Error processing image. Please try again.');
+    }
+  };
+  
+  reader.onerror = () => {
+    console.error('FileReader error:', reader.error);
+    uploadZone.innerHTML = originalHTML;
+    alert('❌ Error reading file. Please try again with a different image.');
+  };
+  
+  // Start reading the file as data URL
+  reader.readAsDataURL(file);
+}
+
+function triggerUpload() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/png,image/jpeg,image/jpg,image/webp';
+  
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      processImageFile(file);
+    }
+  };
+  
+  input.click();
+}
+
+init();
+</script>
+</body>
+</html>

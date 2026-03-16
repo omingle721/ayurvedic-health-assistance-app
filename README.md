@@ -1,2 +1,15 @@
-# ayurvedic-health-assistance-app
-An Ayurvedic Health Assistance Application designed to provide users with Ayurvedic health guidance and remedies through a user-friendly interface. The project focuses on UI/UX design, API integration, testing, and deployment as part of an academic software development project.
+# Ayurvedic Health Assistance Application
+
+This project is a prototype web application designed to provide Ayurvedic health guidance and natural remedies based on user symptoms.
+
+Features:
+- Simple user interface for entering symptoms
+- Ayurvedic remedy suggestions
+- Basic web application structure using HTML, CSS, and JavaScript
+
+Technologies Used:
+- HTML
+- CSS
+- JavaScript
+
+This project was developed as part of an academic software development assignment.
